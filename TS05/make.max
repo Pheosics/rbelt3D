@@ -1,0 +1,22 @@
+C      = /bin/cc
+F77     = f77
+CPP     = /bin/cpp
+F90     = /opt/MIPSpro/bin/f90 
+
+CFLAGS  = -O -64 $(DEFS)
+FFLAGS  = -O -64 $(DEFS) $(HDFINCDIR) $(HDFLIBS) #$(MPILIBS) 
+LDFLAGS = -O -64
+
+DEFS = -DNUMERICS  -DSTATIC -DDECALPHA -DRADBELT
+
+HDF = /usr/local/hdf
+HDFINCDIR = -I$(HDF)/include/
+HDFLIBS = -L$(HDF)/lib -lmfhdf -ldf -ljpeg -lz 
+
+MPI = /usr/local/mpi
+MPIINCDIR = -I$(MPI)/include/
+MPILIBS = -lmpi
+
+CINCDIR = $(HDFINCDIR)
+
+FLIBS = -lfor -lots $(HDFLIBS) 

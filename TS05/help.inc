@@ -1,0 +1,12 @@
+c help.inc
+      INTEGER ORDER,ORD2
+      COMMON /HELP/
+     $     GAMMA,GAMM1,GMM1IN,GMqGM1,CA,CAINV,ALCON,PI,PI4,PI4INV,
+     $     GMINV,GM1,GP1,GM1INV,WIDTH,GGM1,GGM1IN,
+     $     PI8INV,TWELVI,RUSVIS,EVMAX,BETMAX,ALPHA,BETA,
+     $     PDMB,ORDER,ORD2,BDIF,NXSTEP,NYSTEP,
+     $     FCOEF(20),DCOEF(20),DROP(20),
+     $     NSTART,NSTOP,NDUMP,NVAXDUMP,NDIAGN,CRNT,NPICT,
+     $     nplotit,nionplt,nprint,
+     $     nicool,cool,
+     $     niondump

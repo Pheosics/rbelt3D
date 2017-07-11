@@ -1,0 +1,139 @@
+ &rbelt
+   basename='T05_20000404-',
+   firstfilenum=1,
+   lastfilenum=37,
+   filenumstep=1,
+ &END  
+
+ &date
+   year0=2000,
+   doy0=97,
+   hour0=1,
+   min0=0,
+   sec0=0,
+   dsec=300,
+ &END  
+
+ &bounds
+   rmin = 0.999999,
+   rmax = 9.8,
+   zmin = -10.0,
+   zmax = 10.0,
+   tmax = 190000.1,
+ &END 
+ 
+ &dist_1p
+   r=5.0,
+   theta=90.0,
+   phi=0.,
+   alpha=90.0,
+   beta=0.,
+   ke=1.0,
+   epa=80.0,
+   flag0=1,
+   flag_switch=.false.,
+ &END
+
+ &io
+   dthalt = 0.1,
+   flux_dt = 0.2,
+   init_twrite = 1.0,
+   dtwrite = 10.0,
+   binio = .false.,
+   print_info = .false.,
+   flux_out = .true.,
+   dist_out = .false.,
+   prcp_out = .false.,
+   init_out = .true.,
+   cone_out = .false.,
+   lcalc = 0
+ &END 
+
+ &lrntz
+   tstep_lrntz = 0.01,
+   dx_max = 0.1,
+ &END 
+
+ &gcenter
+   tstep_gc = 0.1,
+   dx_max_gc = 0.1,
+   go2lrntz = 0.15,
+   go2gc = .0002,
+   eta1 = 0.6,
+   eta2 = 0.1,
+   dtgo2gc = 1000000.1,
+   seed = 111111,
+ &END 
+
+ &dist
+   dist_seed=112111,
+   dt_dist=1.0,
+   init_t = 82800.0,
+   emin=5.0,
+   emax=50.0,
+   epa_min=30.0,
+   epa_max=90.0,
+   lmin=1.8,
+   lmax=5.8,
+   radius=9.79,
+   exp = 0.0,
+   factor = 1,
+   flag0=0,
+   flag_switch=.false.,
+ &END 
+
+ &geocut
+   nrgdt=100,
+   min_rgdt=0.1,
+   max_rgdt=18.0,
+   res=0.01,
+   delta=0.9,
+   delta2=0.8,
+   pnmbr=0.1,
+ &END 
+
+ &orbit
+   max_mlat=70,
+   min_mlat=40,
+   energy=27.0,
+   altitude=100.0,
+   strtyear=2003,
+   strtdoy=303,
+   strthour=3,
+   strtmin=57,
+   strtsec=36,
+ &END 
+
+ &surfmap
+   x1min=1.0157,
+   x1max=1.0157,
+   x2min=45.0,
+   x2max=45.0,
+   x3min=0.0,
+   x3max=0.0,
+   dx1=5.0,
+   dx2=5.0,
+   dx3=1.0,
+   randseed=111111,
+   stepexp=4,
+ &END
+
+ &pstprc
+   basename='/global/data/hudson/mengel/VAP/',
+   firstfilenum = 112001,
+   lastfilenum =  112493,
+   filenumstep = 2,
+   norm=1229,
+   spctrm=-4.27,
+   ecutoff=10.0,
+   mincnt=1,
+ &END  
+
+ &access
+   r=1.0,
+   pol=90.0,
+   phi=0.0,
+   min_rgdt=1.4,
+   max_rgdt=2.0,
+   drgdt=0.0001,
+ &END  

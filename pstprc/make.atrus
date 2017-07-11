@@ -1,0 +1,7 @@
+COMPILER     = /opt/intel/composer_xe_2013.1.117/bin/intel64/ifort
+
+FFLAGS  = $(HDFINC) $(HDFLIB) -mcmodel=large
+
+HDF = /usr
+HDFINC = -I$(HDF)/include/hdf
+HDFLIB = -L$(HDF)/lib64/hdf -lmfhdf -ldf -ljpeg -lz

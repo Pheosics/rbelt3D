@@ -1,0 +1,24 @@
+#CC      = /usr/local/bin/g++
+CC      = /bin/cxx
+#cc      = /usr/local/bin/gcc
+cc      = /bin/cc
+F77     = /bin/f90
+CPP     = /bin/cpp
+
+CFLAGS  = 
+FFLAGS  = -fast
+LDFLAGS = $(FFLAGS)
+
+DEFS = -DNUMERICS  -DSTATIC -DDECALPHA
+
+HDFINCDIR = -I/software/hdf/include
+HDFCLIBS = -L/software/hdf/lib -lmfhdf -ldf -lz
+HDFFLIBS = -L/software/hdf/lib -lmfhdf -ldf -lz
+
+#HDFINCDIR = -I/n/avldec1/AVL_INSTALL/hdf/HDF3.3r4.alpha/include
+#HDFFLIBS = -L/n/avldec1/AVL_INSTALL/hdf/HDF3.3r4.alpha/lib -lnetcdf -ldf
+
+CINCDIR = $(HDFINCDIR) 
+
+FLIBS = -lfor -lots
+

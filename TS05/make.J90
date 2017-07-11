@@ -1,0 +1,22 @@
+CC      = CC
+cc      = cc
+F77     = cf77
+CPP     = gpp
+
+CFLAGS  = 
+FFLAGS  = -Wp"-F" -dp -g
+LDFLAGS  = -g
+
+DEFS = -DNUMERICS  -DSTATIC -DCRAY
+
+#HDFINCDIR = -I${WORK}/HDF4.1r1/NewHDF/include
+#HDFCLIBS = -L${WORK}/HDF4.1r1/NewHDF/lib -lmfhdf -ldf -lz -lnsl
+#HDFFLIBS = -L${WORK}/HDF4.1r1/NewHDF/lib -lmfhdf -ldf -lz -lnsl
+
+HDFINCDIR = -I/usr/local/include/hdf
+HDFCLIBS = -L/usr/local/lib/ -lnetcdf -ldf
+HDFFLIBS = -L/usr/local/lib/ -lnetcdf -ldf
+
+CINCDIR = $(HDFINCDIR) 
+
+FLIBS = 

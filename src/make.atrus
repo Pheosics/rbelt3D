@@ -1,0 +1,7 @@
+COMPILER     = /opt/intel/bin/ifort
+
+FFLAGS  = $(HDFINC) $(HDFLIB) -mcmodel=medium
+
+HDF = /usr
+HDFINC = -I$(HDF)/include/hdf
+HDFLIB = -L$(HDF)/lib64/hdf -lmfhdf -ldf -ljpeg -lz

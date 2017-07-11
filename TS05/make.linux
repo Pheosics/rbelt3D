@@ -1,0 +1,28 @@
+f95     = /usr/bin/f95
+CC      = /opt/local/pgi-7.2/linux86/7.2/bin/pgCC
+cc      = /opt/local/pgi-7.2/linux86/7.2/bin/pgcc
+F77     = /usr/bin/f77
+cpp	= /usr/bin/pgcc
+
+DEFS = -DNUMERICS -DLINUX -DRADBELT
+
+CFLAGS  = 
+CPP FLAGS = -x cpp-output -E
+FFLAGS  = -g $(DEFS)
+LDFLAGS  = -g 
+
+
+HDF = /tor/d/schmitt/cism/opt-gnu
+HDFINCDIR = -I$(HDF)/include
+HDFLIBS = -L$(HDF)/lib -lmfhdf -ldf -ljpeg -lz -lnsl
+
+MPI = /usr/local/mpi
+MPIINCDIR = -I$(MPI)/include/
+MPILIBS = -L$(MPI)/lib -lmpi
+
+TVHOME = /usr/local/totalview.4.0.0-1/linux-x86/
+TVLIBS = -L$(TVHOME)/lib -ldbfork
+
+CINCDIR = $(HDFINCDIR) $(AVSINCDIR) 
+
+FLIBS = $(HDFFLIBS) $(TVLIBS)

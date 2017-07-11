@@ -1,0 +1,28 @@
+f95     = xlf
+CC      = xlC
+cc      = xlc
+F77     = xlf
+cpp	= cpp
+
+DEFS = -WF,-DNUMERICS -WF,-DLINUX -WF,-DRADBELT
+
+CFLAGS  = 
+CPP FLAGS = -x cpp-output -E
+FFLAGS  = -g $(DEFS)
+LDFLAGS  = -g 
+
+
+HDF = /blhome/schmitt/cism/opt/HDF4.2r1
+HDFINCDIR = -I$(HDF)/include
+HDFLIBS = -L$(HDF)/lib -lmfhdf -ldf -ljpeg -lz -lnsl
+
+MPI = 
+MPIINCDIR = 
+MPILIBS = 
+
+TVHOME = 
+TVLIBS =
+
+CINCDIR = $(HDFINCDIR) $(AVSINCDIR) 
+
+FLIBS = $(HDFFLIBS) $(TVLIBS)

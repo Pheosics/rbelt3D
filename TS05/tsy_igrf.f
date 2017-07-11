@@ -1,0 +1,66 @@
+
+      SUBROUTINE tsy_igrf(XSM,YSM,ZSM,BXSM,BYSM,BZSM,first)
+
+      implicit none
+      logical first
+      real x
+      real XGSM,YGSM,ZGSM,XSM,YSM,ZSM
+      real HXGSM,HYGSM,HZGSM,FXGSM,FYGSM,FZGSM
+      real BXGSM,BYGSM,BZGSM,BXSM,BYSM,BZSM
+      real PARMOD
+      DIMENSION PARMOD(10)
+      real PDYN,DST,BYIMF,BZIMF
+      integer IYEAR,IDAY,IHOUR,MIN,ISEC
+
+      real ST0,CT0,SL0,CL0,CTCL,STCL,CTSL,STSL,SFI,CFI,SPS,
+     * CPS,SHI,CHI,HI,PSI,XMUT,A11,A21,A31,A12,A22,A32,A13,A23,A33,DS3,
+     * CGST,SGST,BA,G,H,REC
+
+      COMMON /GEOPACK1/ ST0,CT0,SL0,CL0,CTCL,STCL,CTSL,STSL,SFI,CFI,SPS,
+     * CPS,SHI,CHI,HI,PSI,XMUT,A11,A21,A31,A12,A22,A32,A13,A23,A33,DS3,
+     * CGST,SGST,BA(6)
+      COMMON /GEOPACK2/ G(66),H(66),REC(66)
+
+      parameter (IYEAR=2001) !YEAR NUMBER (FOUR DIGITS)
+      parameter (IDAY=327) !DAY OF YEAR (DAY 1 = JAN 1)
+      parameter (IHOUR=23) !HOUR OF DAY (00 TO 23)
+      parameter (MIN=12) !MINUTE OF HOUR (00 TO 59)
+      parameter (ISEC=0) !SECONDS OF MINUTE (00 TO 59)
+      parameter (PDYN=1.5) !nPa
+      parameter (DST=-31.0)
+      parameter (BYIMF=0.0) !nT
+      parameter (BZIMF=0.0) !nT
+
+      PARMOD(1)=PDYN
+      PARMOD(2)=DST
+      PARMOD(3)=BYIMF
+      PARMOD(4)=BZIMF
+
+      if (first) then
+         CALL RECALC (IYEAR,IDAY,IHOUR,MIN,ISEC)
+         first=.false.
+      endif
+      CALL SMGSM(XSM,YSM,ZSM,XGSM,YGSM,ZGSM,1)
+      CALL T96_01(0,PARMOD,PSI,XGSM,YGSM,ZGSM,FXGSM,FYGSM,FZGSM)
+      CALL IGRF_GSM(XGSM,YGSM,ZGSM,HXGSM,HYGSM,HZGSM)
+*      CALL DIP (XGSM,YGSM,ZGSM,HXGSM,HYGSM,HZGSM)
+      BXGSM=HXGSM+FXGSM
+      BYGSM=HYGSM+FYGSM
+      BZGSM=HZGSM+FZGSM
+      CALL SMGSM(BXSM,BYSM,BZSM,BXGSM,BYGSM,BZGSM,-1)
+
+      return
+      END
+
+
+
+
+
+
+
+
+
+
+
+
+

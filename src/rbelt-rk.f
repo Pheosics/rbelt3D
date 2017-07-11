@@ -14,9 +14,9 @@ c     assumes initial dydx has been calc. in advance
       include 'rbelt-const.inc'
       external rhs,rhs_init
       integer i,nvars
-      real*8 x,xh
-      real*8 h,dydx(nvars),y(nvars)
-      real*8 h6,hh,dym(nvars),dyt(nvars),yt(nvars)  
+      real x,xh
+      real h,dydx(nvars),y(nvars)
+      real h6,hh,dym(nvars),dyt(nvars),yt(nvars) 
 
       hh=h*0.5 
       h6=h/6. 
@@ -78,11 +78,11 @@ c     the input variables are returned unchanged.
 *      include 'rbelt-const.inc'
       external rhs,rhs_init
       integer i,nvars
-      real*8 y(nvars),dydt1(nvars),dydt2(nvars),dydt3(nvars),t,dt
-      real*8 dydt4(nvars),dydt5(nvars),dydt6(nvars)
-      real*8 ytmp(nvars)
+      real y(nvars),dydt1(nvars),dydt2(nvars),dydt3(nvars),t,dt
+      real dydt4(nvars),dydt5(nvars),dydt6(nvars)
+      real ytmp(nvars)
 
-      real*8 a2,a3(2),a4(3),a5(4),a6(5),e(6),s(6),dtw(6)
+      real a2,a3(2),a4(3),a5(4),a6(5),e(6),s(6),dtw(6)
       common /rkcoef/ a2,a3,a4,a5,a6,e,s,dtw
 
 *      print *,'in rkf4: t,y=',t,y
@@ -136,9 +136,9 @@ c     the input variables are returned unchanged.
 
 	subroutine rkckparm
 
-        implicit none
-        real*8 a2,a3(2),a4(3),a5(4),a6(5),e(6),s(6),dtw(6)
-        common /rkcoef/ a2,a3,a4,a5,a6,e,s,dtw
+	  implicit none
+	  real a2,a3(2),a4(3),a5(4),a6(5),e(6),s(6),dtw(6)
+	  common /rkcoef/ a2,a3,a4,a5,a6,e,s,dtw
 
 	  a2=.2
 	  a3(1)=3./40.
@@ -196,9 +196,9 @@ c     the input variables are returned unchanged.
       include 'rbelt-status.inc'
       external rhs,rhs_init
       integer i,nvars
-      real*8 t,dt
-      real*8 y(nvars),dydt1(nvars),dydt2(nvars)
-      real*8 ytmp(nvars)
+      real t,dt
+      real y(nvars),dydt1(nvars),dydt2(nvars)
+      real ytmp(nvars)
 
       do i=1,nvars
          ytmp(i)=y(i)+dt*.5*dydt1(i)
@@ -236,9 +236,9 @@ c     assumes initial dydx has been calc. in advance
       include 'rbelt-const.inc'
       external rhs,rhs_init
       integer i,nvars
-      real*8 x,xh,x0
-      real*8 h,dydx(nvars),y(nvars)
-      real*8 h6,hh,dym(nvars),dyt(nvars),yt(nvars) 
+      real x,xh,x0
+      real h,dydx(nvars),y(nvars)
+      real h6,hh,dym(nvars),dyt(nvars),yt(nvars) 
 
       hh=h*0.5 
       h6=h/6. 

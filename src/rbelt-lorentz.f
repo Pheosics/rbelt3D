@@ -28,7 +28,7 @@ c     normalize
       implicit none
       include 'rbelt-fields.inc'
       include 'rbelt-const.inc'
-      real*8 t,y(6),dydt(6),gamma
+      real t,y(6),dydt(6),gamma
 
 *      print *
 *      print *,'  in rhs: y,t=',y,t/tfactor
@@ -39,8 +39,8 @@ c     get fields at (y,t)
 c     calculate gamma at time t
 c     (might be better to also advance energy in some situations)
 c     (might be better to use real*8 for gamma)
-      gamma = dsqrt(1.+y(4)*y(4)+y(5)*y(5)+y(6)*y(6))
- 
+      gamma = sqrt(1.+y(4)*y(4)+y(5)*y(5)+y(6)*y(6))
+
       dydt(1)=y(4)/gamma
       dydt(2)=y(5)/gamma
       dydt(3)=y(6)/gamma
@@ -58,14 +58,14 @@ c     (might be better to use real*8 for gamma)
       implicit none
       include 'rbelt-fields.inc'
       include 'rbelt-lorentz.inc'
-      real*8 y(6),dt,u2,gamma,v
+      real y(6),dt,u2,gamma,v
 
       u2=y(4)*y(4)+y(5)*y(5)+y(6)*y(6)
-      gamma = dsqrt(1+u2)
+      gamma = sqrt(1+u2)
 
-      v=dsqrt(u2)/gamma
+      v=sqrt(u2)/gamma
       dt=tstep_lrntz*gamma/b
-      dt=dmin1(dt,dx_max/v)
+      dt=amin1(dt,dx_max/v)
 
       return
       end
@@ -78,7 +78,7 @@ c     (might be better to use real*8 for gamma)
       include 'rbelt-fields.inc'
       include 'rbelt-const.inc'
       include 'rbelt-lorentz.inc'
-      real*8 t,dt,y(6),dydt(6),gamma,u2,v
+      real t,dt,y(6),dydt(6),gamma,u2,v
 
 *      print *
 *      print *,'  in rhs: y,t=',y,t/tfactor
@@ -88,7 +88,7 @@ c     get fields at (y,t)
       
 c     calculate gamma at time t 
       u2 = y(4)*y(4)+y(5)*y(5)+y(6)*y(6)
-      gamma = dsqrt(1+u2)
+      gamma = sqrt(1+u2)
 
       dydt(1)=y(4)/gamma
       dydt(2)=y(5)/gamma
@@ -98,8 +98,8 @@ c     calculate gamma at time t
       dydt(6)=ez + dydt(1)*by - dydt(2)*bx
 
       dt=tstep_lrntz*gamma/b
-      v=dsqrt(u2)/gamma
-      dt=dmin1(dt,dx_max/v)
+      v=sqrt(u2)/gamma
+      dt=amin1(dt,dx_max/v)
 *      print *,'dx=',v*dt
 
       return

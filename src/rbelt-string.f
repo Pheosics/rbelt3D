@@ -80,11 +80,11 @@ c this is an intrinsic
 *
 ************************************************************************
 
-      character*80 function gridfile(basename,filenum)
+      character*80 function gridfile(basename)
 
       implicit none
       character*(*) basename
-      integer filenum,lnblnk
+      integer lnblnk
 
       gridfile=basename(1:lnblnk(basename))//'grid.hdf'
 
@@ -208,11 +208,40 @@ c this is an intrinsic
 ************************************************************************
 
       character*80 function utfile(basename)
-
       implicit none
       character*(*) basename
       integer lnblnk
       utfile=basename(1:lnblnk(basename))//'ut.txt'
+      return
+      end
+
+************************************************************************
+
+      character*80 function lfile(basename)
+      implicit none
+      character*(*) basename
+      integer lnblnk
+      lfile=basename(1:lnblnk(basename))//'lshl.txt'
+      return
+      end
+
+************************************************************************
+
+      character*80 function bfile(basename)
+      implicit none
+      character*(*) basename
+      integer lnblnk
+      bfile=basename(1:lnblnk(basename))//'bfld.txt'
+      return
+      end
+
+************************************************************************
+
+      character*80 function goesfile(basename)
+      implicit none
+      character*(*) basename
+      integer lnblnk
+      goesfile=basename(1:lnblnk(basename))//'goes.txt'
       return
       end
 
@@ -291,10 +320,10 @@ c although this is not related to string management, this is a convenient place 
 
 c Numerical Rec. Portable rand# gen.
 
-      real*8 FUNCTION ran0(idum) 
+      real FUNCTION ran0(idum) 
       INTEGER idum,IA,IM,IQ,IR,MASK 
 *      REAL ran0,AM 
-      REAL*8 AM 
+      REAL AM 
       PARAMETER (IA=16807,IM=2147483647,AM=1./IM, 
      &IQ=127773,IR=2836,MASK=123459876)  
       INTEGER k 

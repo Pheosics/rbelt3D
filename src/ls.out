@@ -1,0 +1,71 @@
+diff rbelt-dipole.f ../lws13/discovery/rbelt-dipole.f
+diff rbelt-dist_sphr.f ../lws13/discovery/rbelt-dist_sphr.f
+diff rbelt-dist_tail.f ../lws13/discovery/rbelt-dist_tail.f
+diff rbelt-gcenter.f ../lws13/discovery/rbelt-gcenter.f
+diff rbelt-grid.f ../lws13/discovery/rbelt-grid.f
+diff rbelt-hdffileread.f ../lws13/discovery/rbelt-hdffileread.f
+diff rbelt-io.f ../lws13/discovery/rbelt-io.f
+diff rbelt-lfm_samp.f ../lws13/discovery/rbelt-lfm_samp.f
+diff rbelt-linterp4d.f ../lws13/discovery/rbelt-linterp4d.f
+diff rbelt-lorentz.f ../lws13/discovery/rbelt-lorentz.f
+diff rbelt-lstar.f ../lws13/discovery/rbelt-lstar.f
+diff rbelt-main1t.f ../lws13/discovery/rbelt-main1t.f
+diff rbelt-main.f ../lws13/discovery/rbelt-main.f
+
+
+
+
+
+
+diff rbelt-particle_loop.f ../lws13/discovery/rbelt-particle_loop.f
+diff rbelt-ppgrid.f ../lws13/discovery/rbelt-ppgrid.f
+diff rbelt-pstprc.f ../lws13/discovery/rbelt-pstprc.f
+diff rbelt-rk.f ../lws13/discovery/rbelt-rk.f
+diff rbelt-string.f ../lws13/discovery/rbelt-string.f
+diff rbelt-time.f ../lws13/discovery/rbelt-time.f
+diff rbelt-time_loop.f ../lws13/discovery/rbelt-time_loop.f
+diff rbelt-zero_fields.f ../lws13/discovery/rbelt-zero_fields.f
+
+diff boundx.inc ../lws13/discovery/boundx.inc
+diff bzero.inc ../lws13/discovery/bzero.inc
+diff help.inc ../lws13/discovery/help.inc
+diff intco1d.inc ../lws13/discovery/intco1d.inc
+diff ionC90.inc ../lws13/discovery/ionC90.inc
+diff lparam.inc ../lws13/discovery/lparam.inc
+diff meter.inc ../lws13/discovery/meter.inc
+diff param.inc ../lws13/discovery/param.inc
+diff rbelt-bounds.inc ../lws13/discovery/rbelt-bounds.inc
+diff rbelt-const.inc ../lws13/discovery/rbelt-const.inc
+diff rbelt-dist.inc ../lws13/discovery/rbelt-dist.inc
+diff rbelt-fields.inc ../lws13/discovery/rbelt-fields.inc
+diff rbelt-flag.inc ../lws13/discovery/rbelt-flag.inc
+diff rbelt-gcenter.inc ../lws13/discovery/rbelt-gcenter.inc
+diff rbelt-geopak.inc ../lws13/discovery/rbelt-geopak.inc
+
+diff rbelt-grid.inc ../lws13/discovery/rbelt-grid.inc
+
+diff rbelt-io.inc ../lws13/discovery/rbelt-io.inc
+diff rbelt-lorentz.inc ../lws13/discovery/rbelt-lorentz.inc
+diff rbelt-mu.inc ../lws13/discovery/rbelt-mu.inc
+diff rbelt-pstprc.inc ../lws13/discovery/rbelt-pstprc.inc
+diff rbelt-status.inc ../lws13/discovery/rbelt-status.inc
+diff rbelt-ut.inc ../lws13/discovery/rbelt-ut.inc
+
+diff rbelt-y0.inc ../lws13/discovery/rbelt-y0.inc
+
+diff var1.inc ../lws13/discovery/var1.inc
+diff var2.inc ../lws13/discovery/var2.inc
+diff var.inc ../lws13/discovery/var.inc
+diff cart-int.F ../lws13/discovery/cart-int.F
+diff cord.F ../lws13/discovery/cord.F
+diff flux.F ../lws13/discovery/flux.F
+diff Geopack_2005.F ../lws13/discovery/Geopack_2005.F
+diff grid.F ../lws13/discovery/grid.F
+diff hdftake_mpi.F ../lws13/discovery/hdftake_mpi.F
+diff intcoef1d.F ../lws13/discovery/intcoef1d.F
+diff interp-all.F ../lws13/discovery/interp-all.F
+diff ionset.F ../lws13/discovery/ionset.F
+diff jcalc2.F ../lws13/discovery/jcalc2.F
+diff therest.F ../lws13/discovery/therest.F
+
+diff Makefile ../lws13/discovery/Makefile

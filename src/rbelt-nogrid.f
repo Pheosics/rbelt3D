@@ -18,7 +18,7 @@ c     then  UT ref. date/time is read from the UT file.
       implicit none	
       include 'rbelt-grid.inc'
       include 'rbelt-const.inc'
-      real*8 time
+      real time
 
       tzero = tzero + time
       print *,'i; seconds from UT reference time; sec. from start;

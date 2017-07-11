@@ -11,8 +11,8 @@ c     read & scale parameters for guiding center integrator
       include 'rbelt-const.inc'
 
 c     read in and normalize input parameters
-      NAMELIST /gcenter/ tstep_gc,dx_max_gc,go2lrntz,go2gc,etaswitch,
-     &dtgo2gc,seed
+      NAMELIST /gcenter/ tstep_gc,dx_max_gc,go2lrntz,etaswitch,
+     &go2gc,dtgo2gc,seed
       OPEN (UNIT=81,FILE='rbelt-input.txt',STATUS='OLD') 
       READ (81,gcenter)
       CLOSE (81)
@@ -45,10 +45,10 @@ c     normalize
       include 'rbelt-mu.inc'
       include 'rbelt-fields.inc'
       include 'rbelt-const.inc'
-      real*8 t
-      real*8 y(4),dydt(4)
-      real*8 b2,gamma,gmbm,gmb2m
-      real*8 pgmb,p2gmb4,ax,ay,az
+      real t
+      real y(4),dydt(4)
+      real b2,gamma,gmbm,gmb2m
+      real pgmb,p2gmb4,ax,ay,az
 
 *      print *
 *      print *,'in rhs: y,t=',y,t/tfactor
@@ -59,7 +59,7 @@ c     update the fields to (y,t)
 c     calculate drift velocities
 c     first calc some repeated values
       b2=1/(b*b)
-      gamma=dsqrt(1.+2.*dabs(b)*mu+y(4)*y(4))
+      gamma=sqrt(1.+2.*abs(b)*mu+y(4)*y(4))
       gmbm=mu/gamma/b
       gmb2m=gmbm/b
       pgmb=y(4)*gmbm/mu
@@ -120,11 +120,11 @@ c    now calculate the drift velocities
       include 'rbelt-status.inc'
       include 'rbelt-bounds.inc'
       include 'rbelt-dist.inc'
-      real*8 t,dt
-      real*8 y(4),dydt(4)
-      real*8 b2,b3,gamma,gmbm,gmb2m
-      real*8 p,v,pgmb,p2gmb4,ax,ay,az
-      real*8 fm,fc,fg,fe,bxgb1,bxgb2,bxgb3
+      real t,dt
+      real y(4),dydt(4)
+      real b2,b3,gamma,gmbm,gmb2m
+      real p,v,pgmb,p2gmb4,ax,ay,az
+      real fm,fc,fg,fe,bxgb1,bxgb2,bxgb3
 
 *      print *
 *      print *,'in rhs_init: y,t=',y,t/tfactor
@@ -134,8 +134,8 @@ c     update the fields to (y,t)
 
 c     calculate drift velocities
 c     first calc some repeated values
-      gamma=dsqrt(1.+2.*dabs(b)*mu+y(4)*y(4))
-      p=dsqrt(gamma*gamma-1)
+      gamma=sqrt(1.+2.*abs(b)*mu+y(4)*y(4))
+      p=sqrt(gamma*gamma-1)
       b2=1/(b*b)
       gmbm=mu/gamma/b
       gmb2m=gmbm/b
@@ -173,14 +173,14 @@ c    now calculate the drift velocities
 
 c     compute GC force terms
       fm=gmbm*(bx*dbdx+by*dbdy+bz*dbdz)
-      fc=p2gmb4*b*b*dsqrt(ax*ax+ay*ay+az*az)
-      fg=gmbm*dsqrt(bxgb1*bxgb1+bxgb2*bxgb2+bxgb3*bxgb3)
-      fe=dsqrt(ex*ex+ey*ey+ez*ez)
+      fc=p2gmb4*b*b*sqrt(ax*ax+ay*ay+az*az)
+      fg=gmbm*sqrt(bxgb1*bxgb1+bxgb2*bxgb2+bxgb3*bxgb3)
+      fe=sqrt(ex*ex+ey*ey+ez*ez)
 
 c     compute time step
-      dt=tstep_gc*p/dsqrt(fm*fm+fc*fc+fg*fg+fe*fe)
-      v=dsqrt(dydt(1)*dydt(1)+dydt(2)*dydt(2)+dydt(3)*dydt(3))
-      dt=dmin1(dt,dx_max_gc/v)
+      dt=tstep_gc*p/sqrt(fm*fm+fc*fc+fg*fg+fe*fe)
+      v=sqrt(dydt(1)*dydt(1)+dydt(2)*dydt(2)+dydt(3)*dydt(3))
+      dt=amin1(dt,dx_max_gc/v)
 *      print *,'dt,dt_max,dx=',real(dt/tfactor),
 *     &real(dx_max_gc/v/tfactor),real(dt*v)
 
@@ -193,23 +193,13 @@ c     switch = (2*mu0/b) * (dsum (db_i/dx_j)^2) / b2
       b3=b*b*b
       switch=2*mu*(dbxdx*dbxdx+dbxdy*dbxdy+dbxdz*dbxdz+dbydx*dbydx+
      &dbydy*dbydy+dbydz*dbydz+dbzdx*dbzdx+dbzdy*dbzdy+dbzdz*dbzdz)/b3
-      eta=y(4)*2*pi*b/dsqrt(ax*ax+ay*ay+az*az)
-!      if (eta.ge.etaswitch) then
-!         print *, 'ETA VIOLATION', eta, etaswitch
-!         if (flag_switch.eqv..true.) then
-!            if (status.le.0) status = 4
-!         else
-!            if (status.le.0) status = 2
-!         endif
-!      endif
-!      if (switch.ge.go2lrntz) then
-!         print *, 'EPSILON VIOLATION', switch, go2lrntz
-!         if (flag_switch.eqv..true.) then
-!            if (status.le.0) status = 4
-!         else
-!            if (status.le.0) status = 2
-!         endif
-!      endif
+      if (switch.ge.go2lrntz) then
+         if (flag_switch.eqv..true.) then
+            if (status.le.0) status = 4
+         else
+            if (status.le.0) status = 5
+         endif
+      endif
 
       return
       end
@@ -229,22 +219,27 @@ c        NANs & seg. fault (e.g., divide by very sm. B)
       include 'rbelt-bounds.inc'
       include 'rbelt-mu.inc'
       include 'rbelt-flag.inc'
-      real*8 gamma,w0,y(6),t
-      real*8 bprime,ran0,phase,p_perp,p_parl,rho
+      real gamma,w0,y(6),t
+      real bprime,ran0,phase,p_perp,p_parl,rho
 
       if (status.eq.4) status=0
-      call get_fields2(y,t)
+      call get_fields(y,t)
 
 c     choose random gyrophase
       by=by+1.e-19
-      bprime = dsqrt(bx*bx+by*by)
+      bprime = sqrt(bx*bx+by*by)
       phase = ran0(seed)*2*pi
 
 c     calc. energy momentum & gyroradius
-      w0=dsqrt(1.+2.*dabs(b)*mu+y(4)*y(4))-1.
-      p_perp = dsqrt(w0*(2+w0)-y(4)*y(4))
+      w0=sqrt(1.+2.*abs(b)*mu+y(4)*y(4))-1.
+      p_perp = sqrt(w0*(2+w0)-y(4)*y(4))
       p_parl = y(4)
       rho = p_perp/b
+c     rho is usually < an order of mag. smaller than grid delta
+c     when a switch is called for, but just in case, we set a maximum rho
+      if (rho.gt.dx_max_gc) rho=dx_max_gc
+
+*      print *,'GC->Lorentz: t,rho=',t/tfactor,p_perp/b
 
 *      print *
 *      print *,'guiding center traj. :'
@@ -269,18 +264,18 @@ c     calc. energy momentum & gyroradius
 *      print *,'switch=',switch
 
 c     move position from guiding center to particle trajectory
-      y(1)=y(1)+rho*(-by*dsin(phase)+bx*bz*dcos(phase)/b)/bprime
-      y(2)=y(2)+rho*(bx*dsin(phase)+by*bz*dcos(phase)/b)/bprime
-      y(3)=y(3)-rho*bprime*dcos(phase)/b
+      y(1)=y(1)+rho*(-by*sin(phase)+bx*bz*cos(phase)/b)/bprime
+      y(2)=y(2)+rho*(bx*sin(phase)+by*bz*cos(phase)/b)/bprime
+      y(3)=y(3)-rho*bprime*cos(phase)/b
 
 c     calc. cartesian components of proper velocity
-      y(4)=(p_perp*(by*dcos(phase)+bz*bx*dsin(phase)/b)/
+      y(4)=(p_perp*(by*cos(phase)+bz*bx*sin(phase)/b)/
      &   bprime+p_parl*bx/b)
-      y(5)=(p_perp*(-bx*dcos(phase)+bz*by*dsin(phase)/b)/
+      y(5)=(p_perp*(-bx*cos(phase)+bz*by*sin(phase)/b)/
      &   bprime+p_parl*by/b)
-      y(6)=(-p_perp*bprime*dsin(phase)/b+p_parl*bz/b)
+      y(6)=(-p_perp*bprime*sin(phase)/b+p_parl*bz/b)
 
-      call get_fields2(y,t)
+      call get_fields(y,t)
 
 *      print *
 *      print *,'Lorentz traj. :'
@@ -320,8 +315,9 @@ c     calc. cartesian components of proper velocity
       include 'rbelt-status.inc'
       include 'rbelt-const.inc'
       include 'rbelt-flag.inc'
+      include 'rbelt-gcenter.inc'
       integer i
-      real*8 y(6),t,p_perp,p_parl,pb,rho,x(3),p2,w0,gamma
+      real y(6),t,p_perp,p_parl,pb,rho,x(3),p2,w0,gamma
 
       if (status.eq.-2) status=0
       call get_fields(y,t)
@@ -350,9 +346,12 @@ c     calc. cartesian components of proper velocity
 
 c     get b field at/near guiding center position
       do 100 i = 1,10
-         p_perp = dsqrt((y(5)*bz-y(6)*by)**2.+
+         p_perp = sqrt((y(5)*bz-y(6)*by)**2.+
      &   (y(6)*bx-y(4)*bz)**2.+(y(4)*by-y(5)*bx)**2.)/b
          rho = p_perp/b
+c        rho is usually < an order of mag. smaller than grid delta
+c        when a switch is called for, but just in case, we set a maximum rho
+         if (rho.gt.dx_max_gc) rho=dx_max_gc
          pb = p_perp*b
          x(1) = y(1) - rho*(by*y(6)-bz*y(5))/pb
          x(2) = y(2) - rho*(bz*y(4)-bx*y(6))/pb
@@ -360,12 +359,14 @@ c     get b field at/near guiding center position
          call get_fields(x,t)
 100   continue
 
+*      print *,'Lorentz->GC: t,rho=',t/tfactor,p_perp/b
+
 c     move position vector from point on trajectory to guiding center
       y(1) = x(1)
       y(2) = x(2)
       y(3) = x(3)
 
-      gamma=dsqrt(1+y(4)*y(4)+y(5)*y(5)+y(6)*y(6))
+      gamma=sqrt(1+y(4)*y(4)+y(5)*y(5)+y(6)*y(6))
       y(4)=(y(4)*bx+y(5)*by+y(6)*bz)/b
       y(5)=gamma
       y(6)=p_perp*p_perp/b/2
@@ -409,9 +410,9 @@ c     move position vector from point on trajectory to guiding center
       include 'rbelt-const.inc'
       include 'rbelt-bounds.inc'
       include 'rbelt-grid.inc'
-      real*8 y(6),t,tchck
-      real*8 invb2,invb4,vxb1,vxb2,vxb3,rho2
-      real*8 p_parl,p_perp
+      real y(6),t,tchck
+      real invb2,invb4,vxb1,vxb2,vxb3,rho2
+      real p_parl,p_perp
 
       call get_fields2(y,t)
       invb2=1/(b*b)
@@ -427,11 +428,8 @@ c     move position vector from point on trajectory to guiding center
 *     & (y(6)*bx-y(4)*bz)**2.+(y(4)*by-y(5)*bx)**2.)/b
 *      print *,'z,switch,mu=',y(3),sqrt(switch),
 *     & abs(p_perp*p_perp/b/2*m0*c*c*ffactor)
-
       if (switch.le.go2gc) then
-         print *,'switch.le.go2gc',dsqrt(switch),dsqrt(go2gc)
-         print *,'going to gcenter traj. at t,r,tchck=',t/tfactor,
-     &    dsqrt(y(1)*y(1)+y(2)*y(2)+y(3)*y(3)),tchck/tfactor
+*         print *,'switch.le.go2gc',sqrt(switch),sqrt(go2gc)
          if (status.le.0) status = -2
       else
          tchck=tchck+dtgo2gc
@@ -448,10 +446,12 @@ c     move position vector from point on trajectory to guiding center
       include 'rbelt-mu.inc'
       include 'rbelt-fields.inc'
       include 'rbelt-const.inc'
-      real*8 y(4),dydt(4),t
-      real*8 bxstar,bystar,bzstar,exstar,eystar,ezstar
-      real*8 gamma,pparl_b,pparl_b2,bsparl,mu_gamma,pparl_gamma
-      real*8 bxhat,byhat,bzhat,dbdtpp_b2
+      real y(4),dydt(4),t
+      real bxstar,bystar,bzstar,exstar,eystar,ezstar
+      real gamma,pparl_b,pparl_b2,bsparl,mu_gamma,pparl_gamma,dbdtpp_b2
+      real bxhat,byhat,bzhat 
+*      real small_number
+*      parameter(small_number=1.E-4)
 
 *      print *
 *      print *,'  in rhs: y,t=',y,t/tfactor
@@ -459,7 +459,16 @@ c     move position vector from point on trajectory to guiding center
 c     update the fields to time t
       call get_fields2(y,t)
 
-      gamma=dsqrt(1.+2.*dabs(b)*mu+y(4)*y(4))
+*      if (b.lt.small_number) then
+*         print *,'WARNING, b.lt.small_number in rhs_cb'
+*         dydt(1)=0.
+*         dydt(2)=0.
+*         dydt(3)=0.
+*         dydt(4)=0.
+*         return
+*      endif
+
+      gamma=sqrt(1.+2.*abs(b)*mu+y(4)*y(4))
 
       pparl_b=y(4)/b
       pparl_b2=pparl_b/b
@@ -495,27 +504,38 @@ c     update the fields to time t
       include 'rbelt-mu.inc'
       include 'rbelt-fields.inc'
       include 'rbelt-const.inc'
-
       include 'rbelt-gcenter.inc'
-*      include 'rbelt-flag.inc'
+      include 'rbelt-flag.inc'
       include 'rbelt-status.inc'
-*      include 'rbelt-bounds.inc'
+      include 'rbelt-bounds.inc'
       include 'rbelt-dist.inc'
 
-      real*8 y(4),dydt(4),t,dt
-      real*8 bxstar,bystar,bzstar,exstar,eystar,ezstar
-      real*8 gamma,pparl_b,pparl_b2,bsparl,mu_gamma,pparl_gamma
-      real*8 ax,ay,az,p,v,b2,b3,fx,fy,fz,exbhatx,exbhaty,exbhatz
-      real*8 bxhat,byhat,bzhat,dbdtpp_b2,bdgbx,bdgby,bdgbz
+      real y(4),dydt(4),t,dt
+      real bxstar,bystar,bzstar,exstar,eystar,ezstar
+      real gamma,pparl_b,pparl_b2,bsparl,mu_gamma,pparl_gamma,dbdtpp_b2
+      real ax,ay,az,p,v,b2,b3,fx,fy,fz,exbhatx,exbhaty,exbhatz
+      real bxhat,byhat,bzhat,bdgbx,bdgby,bdgbz
+*      real small_number
+*      parameter(small_number=1.E-4)
 
 *      print *
-*      print *,'  in rhs: y,t,dt=',y,t/tfactor,dt/tfactor
+*      print *,'  in rhs: y,t,dt,b=',y,t/tfactor,dt/tfactor,
+*     &abs(b/ffactor/ntg)
 
 c     update the fields to time t
       call get_fields2(y,t)
+!      if (status.gt.0) return 
 
-      gamma=dsqrt(1.+2.*dabs(b)*mu+y(4)*y(4))
+*      if (b.lt.small_number) then
+*         print *,'WARNING, b.lt.small_number in rhs_cb'
+*         dydt(1)=0.
+*         dydt(2)=0.
+*         dydt(3)=0.
+*         dydt(4)=0.
+*         return
+*      endif
 
+      gamma=sqrt(1.+2.*abs(b)*mu+y(4)*y(4))
       pparl_b=y(4)/b
       pparl_b2=pparl_b/b
 
@@ -558,13 +578,13 @@ c     this is guiding center "force"
 *      stop
 
 c     compute next time step
-      p=dsqrt(gamma*gamma-1)
+      p=sqrt(gamma*gamma-1)
 c     dt << p (total particle momentum) / dp/dt
-      dt=tstep_gc*p/dsqrt(fx*fx+fy*fy+fz*fz)
+      dt=tstep_gc*p/sqrt(fx*fx+fy*fy+fz*fz)
 *     (dt=tstep_gc*p/abs(dydt(4) ??)
-      v=dsqrt(dydt(1)*dydt(1)+dydt(2)*dydt(2)+dydt(3)*dydt(3))
+      v=sqrt(dydt(1)*dydt(1)+dydt(2)*dydt(2)+dydt(3)*dydt(3))
 c     dt << x (where x is small w.r.t. system scale lengths) / dx/dt
-      dt=dmin1(dt,(dx_max_gc/v))
+      dt=min(dt,(dx_max_gc/v))
 !      print *,'dt=',dt/tfactor
 
 c     check for possible violation of 1st invariant
@@ -573,7 +593,6 @@ c     go2lrntz set = go2lrntz^2 in gc_params
 c     rho = p_perp/b = sqrt(2*mu0*b)/b = sqrt(2*mu0/b)
 c     epsilon^2 = rho^2 * (dsum (db_i/dx_j)^2) / b2
 c     switch = (2*mu0/b) * (dsum (db_i/dx_j)^2) / b2
-
       b3=b*b*b
       switch=2*mu*(dbxdx*dbxdx+dbxdy*dbxdy+dbxdz*dbxdz+dbydx*dbydx+
      &dbydy*dbydy+dbydz*dbydz+dbzdx*dbzdx+dbzdy*dbzdy+dbzdz*dbzdz)/b3
@@ -581,27 +600,28 @@ c     switch = (2*mu0/b) * (dsum (db_i/dx_j)^2) / b2
       bdgbx = bx*dbxdx + by*dbxdy + bz*dbxdz
       bdgby = bx*dbydx + by*dbydy + bz*dbydz
       bdgbz = bx*dbzdx + by*dbzdy + bz*dbzdz
-      eta = pparl_b2*dsqrt(bdgbx*bdgbx+bdgby*bdgby+bdgbz*bdgbz)*gamma/b
+      eta = pparl_b2*sqrt(bdgbx*bdgbx+bdgby*bdgby+bdgbz*bdgbz)*gamma/b
 
 !      print *,'eta=',eta
 
-      if (switch.ge.go2lrntz) then
-         print *,'switch.ge.go2lrntz',dsqrt(switch),dsqrt(go2lrntz),
-     &t/tfactor
-         if (flag_switch.eqv..true.) then
-            if (status.le.0) status = 4
-         else
-            if (status.le.0) status = 5
-         endif
-      endif
-      if (eta.ge.etaswitch) then
-         print *,'eta.ge.etaswitch',eta,etaswitch,t/tfactor
-         if (flag_switch.eqv..true.) then
-            if (status.le.0) status = 4
-         else
-            if (status.le.0) status = 5
-         endif
-      endif
+!      if (switch.ge.go2lrntz) then
+!         print *,'switch.ge.go2lrntz',sqrt(switch),sqrt(go2lrntz),
+!     &t/tfactor
+!         if (flag_switch.eqv..true.) then
+!            if (status.le.0) status = 4
+!         else
+!            if (status.le.0) status = 5
+!         endif
+!      endif
+!      if (eta.ge.etaswitch) then
+!         print *,'eta.ge.etaswitch',eta,etaswitch,t/tfactor
+!         if (flag_switch.eqv..true.) then
+!            if (status.le.0) status = 4
+!         else
+!            if (status.le.0) status = 5
+!         endif
+!      endif
+
 
 
       return

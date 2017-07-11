@@ -21,7 +21,7 @@ c***********************************************************************
       integer filenum,firstfilenum,lastfilenum,filenumstep,timesteps
       NAMELIST /rbelt/ basename,firstfilenum,lastfilenum,filenumstep
       integer*4 today(3), now(3)
-      real*8 t2
+      real t2
 
       print *
       print *,'*** IN PROGRAM MAIN ***'
@@ -87,12 +87,12 @@ c     calc. field dependent particle data
 c     initialize i/o routines
       call io_init(basename,firstfilenum)
 c     field dataset i/o
-!      call field_io(basename,firstfilenum,firstfilenum,timesteps)
+      call field_io(basename,firstfilenum,firstfilenum,timesteps)
 c     to open multiple output files
-!      call openfile(basename,firstfilenum)
+      call openfile(basename,firstfilenum)
 
 c     loop through and advance particles & output data
-      call particle_loop(t2)
+      call particle_loop(firstfilenum,t2)
 
 c     print date & time
 *      call idate(today)
@@ -101,7 +101,7 @@ c     print date & time
 *      print *,'finished running particles hour, min, sec =',now
 
 c     close for multiple output files
-!      call closefile()
+      call closefile()
 
 c     loop over input field files
       print *
@@ -119,9 +119,9 @@ c     loop over input field files
          call calc_derivs(1,nt)
 
 c        field dataset i/o
-!         call field_io(basename,filenum,firstfilenum,timesteps)
+         call field_io(basename,filenum,firstfilenum,timesteps)
 c        to open multiple output files
-!         call openfile(basename,filenum)
+         call openfile(basename,filenum)
 
 c        zero time step (here tgrmax becomes tmax)
          tmin=tgr(1)
@@ -131,9 +131,9 @@ c        calc. field dependent particle data
          call dist_particles2(t2)
 c        advance particles & output data
          t2=tmax-tzero
-         call particle_loop(t2)
+         call particle_loop(filenum,t2)
 c        close for multiple output files
-!         call closefile()
+         call closefile()
       enddo
 
 c     finish up with i/o routines

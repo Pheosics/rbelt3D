@@ -1,19 +1,20 @@
 c    rbelt-fields.inc - particle E & B fields and spatial derivatives
 
-      real*8 b,bx,by,bz,ex,ey,ez,dbdx,dbdy,dbdz,dbxdx,dbxdy,dbxdz,
+      real b,bx,by,bz,ex,ey,ez,dbdx,dbdy,dbdz,dbxdx,dbxdy,dbxdz,
      &dbydx,dbydy,dbydz,dbzdx,dbzdy,dbzdz,dbdt,dbxdt,dbydt,dbzdt
 
       common /fields/b,bx,by,bz,ex,ey,ez,dbdx,dbdy,dbdz,
      &dbxdx,dbxdy,dbxdz,dbydx,dbydy,dbydz,dbzdx,dbzdy,dbzdz,dbdt,
      &dbxdt,dbydt,dbzdt
 
-      real*8 vpotx,vpoty,vpotz
-      common /vectpot/vpotx,vpoty,vpotz
+*      real vpotx,vpoty,vpotz
+*      common /vectpot/vpotx,vpoty,vpotz
 
-	integer ixs,iys,izs
-	real*8 pas,lshells,energys
-	common /imysave/ixs,iys,izs
-	common /rmysave/pas,lshells,energys
+      real fnorm,b00
+      common /fnormalize/fnorm,b00
+
+      logical noe
+      common /efield/noe
 
 *      data bx /0./
 *      data ex /0./
@@ -39,10 +40,3 @@ c    rbelt-fields.inc - particle E & B fields and spatial derivatives
 *      data dbydt /0./
 *      data dbzdt /0./
 *      data dbdt /0./
-
-*	data ixs /1/
-*	data iys /1/
-*	data izs /1/
-*	data pas /0./
-*	data lshells /0./
-*	data energys /0./

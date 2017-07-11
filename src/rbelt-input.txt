@@ -1,7 +1,7 @@
  &rbelt
    basename='/global/data/physics/mengel/fields/T05_',
    firstfilenum=1,
-   lastfilenum=1,
+   lastfilenum=10,
    filenumstep=1,
  &END  
 
@@ -19,7 +19,7 @@
    rmax = 5.8,
    zmin = -3.0,
    zmax = 3.0,
-   tmax = 60.1,
+   tmax = 20000.1,
  &END 
  
  &dist_1p
@@ -38,11 +38,11 @@
    dthalt = 0.1,
    flux_dt = 0.2,
    init_twrite = 0.0,
-   dtwrite = 1.0,
+   dtwrite = 0.1,
    binio = .false.,
    print_info = .false.,
-   flux_out = .true.,
-   dist_out = .false.,
+   flux_out = .false.,
+   dist_out = .true.,
    prcp_out = .false.,
    init_out = .true.,
    cone_out = .false.,
@@ -65,19 +65,19 @@
  &END 
 
  &dist
-   dist_seed=100003,
+   dist_seed=111111,
    dt_dist=0.0,
    init_t = 0.0,
    emin=20.0,
-   emax=100.0,
-   epa_min=30.0,
+   emax=20.0,
+   epa_min=90.0,
    epa_max=90.0,
-   lmin=1.5,
-   lmax=4.5,
+   lmin=2.5,
+   lmax=2.5,
    radius=9.79,
    exp = 0.0,
    factor = 1,
-   flag0=0,
+   flag0=1,
    flag_switch=.false.,
  &END 
 

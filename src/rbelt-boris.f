@@ -1,15 +1,17 @@
 c     rbelt-boris.f - Boris (leap-frog) time stepping
 
 ***********************************************************************
+**     Subroutine boris_init
+**	This routine starts the Boris algorithm.  B.Kress Feb. 2003
+**
+
+***********************************************************************
 
       subroutine dummy_init(t,y,dydt,dtio)
       return
       end
 
 ***********************************************************************
-**     Subroutine boris_init
-**	This routine starts the Boris algorithm.  B.Kress Feb. 2003
-**
 
       subroutine boris_init(t,y,dydt,dtio)
 
@@ -19,12 +21,11 @@ c     rbelt-boris.f - Boris (leap-frog) time stepping
       include 'rbelt-status.inc'
       include 'rbelt-lorentz.inc'
       integer i
-      real*8 t
-      real*8 gamma,gamma2,t2,dt2,dt3,bv
-      real*8 ux,uy,uz,y(6),dt,dtio,dydt(6)
+      real t
+      real gamma,gamma2,t2,dt2,dt3,bv
+      real ux,uy,uz,y(6),dt,dtio,dydt
 
-!      print *,'*** in subroutine boris_init ***'
-*      print *,'t,y=',t/tfactor,y
+*      print *,'*** in subroutine boris_init ***'
 
 c     advance proper velocity dt using values for e,b,& gamma at (y,t)
 
@@ -33,7 +34,7 @@ c     update the fields to (y,t)
       if (status.gt.0) return
 
       gamma2= 1+y(4)*y(4)+y(5)*y(5)+y(6)*y(6)
-      gamma = dsqrt(gamma2)
+      gamma = sqrt(gamma2)
 
       dtio=tstep_lrntz*gamma/b
       dt=-0.5*dtio
@@ -78,8 +79,8 @@ c     update the fields to (y,t)
       include 'rbelt-status.inc'
       external rhs,rhs_init
       integer nvars
-      real*8 y(nvars),dydt(nvars),t,dt
-      real*8 gamma,gamma2,t2,dt2,dt3,bv,ux,uy,uz
+      real y(nvars),dydt(nvars),t,dt
+      real gamma,gamma2,t2,dt2,dt3,bv,ux,uy,uz
 
 *      print *,'*** in subroutine boris ***'
 *      print *,'t,y=',t/tfactor,y
@@ -102,7 +103,7 @@ c add half the E field impulse to u (initialy at t - dt/2)
 c calculate gamma and other repeated values at time t 
 
       gamma2= 1+ux*ux+uy*uy+uz*uz
-      gamma = dsqrt(gamma2)
+      gamma = sqrt(gamma2)
       t2 = dt*dt*b*b/4/gamma2
       dt2 = dt/2/gamma
       dt3 = dt*dt/4/gamma2
@@ -116,7 +117,7 @@ c add rotation and 2nd half of E field impulse to u
 
 c calculate gamma at t + dt/2
 
-      gamma = dsqrt(1+y(4)*y(4)+y(5)*y(5)+y(6)*y(6))
+      gamma = sqrt(1+y(4)*y(4)+y(5)*y(5)+y(6)*y(6))
 
 c use v = u/gamma at t + dt/2 to advance position from t to t + dt
 
@@ -141,11 +142,11 @@ c use v = u/gamma at t + dt/2 to advance position from t to t + dt
       include 'rbelt-status.inc'
       include 'rbelt-lorentz.inc'
       integer i
-      real*8 t
-      real*8 gamma,gamma2,t2,dt2,dt3,bv
-      real*8 ux,uy,uz,y(6),dt,dtio,dydt
+      real t
+      real gamma,gamma2,t2,dt2,dt3,bv
+      real ux,uy,uz,y(6),dt,dtio,dydt
 
-!      print *,'*** in subroutine boris_stop ***'
+*      print *,'*** in subroutine boris_init ***'
 
 c     advance proper velocity dt using values for e,b,& gamma at (y,t)
 
@@ -154,7 +155,7 @@ c     update the fields to (y,t)
       if (status.gt.0) return
 
       gamma2= 1+y(4)*y(4)+y(5)*y(5)+y(6)*y(6)
-      gamma = dsqrt(gamma2)
+      gamma = sqrt(gamma2)
 
       dt=dtio/2.0
 

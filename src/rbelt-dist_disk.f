@@ -17,15 +17,15 @@ c initializes guiding center or Lorentz particles
       include 'rbelt-bounds.inc'
       include 'rbelt-io.inc'
       integer file_num,n,j,seed
-      real*8 t2,x(3),t,r,lshell,epa,phi,ke,ran0,theta
-      real*8 alpha,beta,gamma,p
+      real x(3),t,t2,r,lshell,epa,phi,ke,ran0,theta
+      real alpha,beta,gamma,p
 
       NAMELIST/dist/dist_seed,dt_dist,init_t,emin,emax,epa_min,epa_max,
      &lmin,lmax,radius,exp,factor,flag0,flag_switch
      
-!      print *
-!      print *,'*** in subroutine dist_particles ***'
-!      print *,'num_particles=',num_particles
+      print *
+      print *,'*** in subroutine dist_particles ***'
+      print *,'num_particles=',num_particles
 
       initdist=2
 c     read in and normalize input parameters
@@ -58,9 +58,9 @@ c     normalize
 c        particle start time
          y0(7,n) = tzero1+init_t+ran0(seed)*dt_dist
 c        particle position
-         y0(1,n) = r*dsin(theta)*dcos(phi)
-         y0(2,n) = r*dsin(theta)*dsin(phi)
-         y0(3,n) = r*dcos(theta)
+         y0(1,n) = r*sin(theta)*cos(phi)
+         y0(2,n) = r*sin(theta)*sin(phi)
+         y0(3,n) = r*cos(theta)
 c        status
          int_y0(1,n) = 0
 c        flag
@@ -74,15 +74,15 @@ c           correct L-shell
             alpha=epa
 c           compute proper velocity
             gamma = 1.+ ke
-            p = dsqrt(gamma*gamma-1.)
+            p = sqrt(gamma*gamma-1.)
 c           it is here assumed that b is in z dir. (in equatorial plane)
-            y0(4,n) = p*dsin(alpha)*dcos(beta)
-            y0(5,n) = p*dsin(alpha)*dsin(beta)
-            y0(6,n) = p*dcos(alpha)
+            y0(4,n) = p*sin(alpha)*cos(beta)
+            y0(5,n) = p*sin(alpha)*sin(beta)
+            y0(6,n) = p*cos(alpha)
 c        for guiding center trajectories
          elseif (flag0.ge.1) then
 c           set parallel momentum
-            y0(4,n) = dsqrt(ke*(ke+2.))*dcos(epa)*charge_sign
+            y0(4,n) = sqrt(ke*(ke+2.))*cos(epa)*charge_sign
 c           set kinetic energy
             y0(5,n) = ke
 c           still need to call get_fields and calc. y0(6,n) = mu
@@ -117,7 +117,7 @@ c and time grid using parameters specified in the input file.
       include 'rbelt-fields.inc'
       include 'rbelt-bounds.inc'
       integer n
-      real*8 x(3),t,t2
+      real x(3),t,t2
      
       print *
       print *,'*** in subroutine dist_particles2 ***'

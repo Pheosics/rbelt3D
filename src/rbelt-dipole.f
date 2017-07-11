@@ -67,14 +67,14 @@ c     pure dipole B field
       include 'rbelt-bounds.inc' 
       include 'rbelt-fields.inc'
       include 'rbelt-status.inc'
-      real*8 y(6)
-      real*8 t
-      real*8 r,r2,r5,r7,bfac1,bfac2
-      real*8 cphi,sphi
+      real y(6)
+      real t
+      real r,r2,r5,r7,bfac1,bfac2
+      real cphi,sphi
 
       if (status.gt.0) return
       r2=y(1)*y(1)+y(2)*y(2)+y(3)*y(3)
-      r=dsqrt(r2)
+      r=sqrt(r2)
       if (t.ge.tgrmax) then
          status=3
          return
@@ -92,7 +92,7 @@ c     pure dipole B field
       by=-bfac1*y(2)*y(3)
       bz=-bfac1*y(3)*y(3)+b0/r2/r
 
-      b=dsqrt(bx*bx+by*by+bz*bz)
+      b=sqrt(bx*bx+by*by+bz*bz)
 
       return
       end
@@ -108,14 +108,14 @@ c     pure dipole B field
       include 'rbelt-bounds.inc' 
       include 'rbelt-fields.inc'
       include 'rbelt-status.inc'
-      real*8 y(6)
-      real*8 t
-      real*8 r,r2,r5,r7,bfac1,bfac2
-      real*8 cphi,sphi
+      real y(6)
+      real t
+      real r,r2,r5,r7,bfac1,bfac2
+      real cphi,sphi
 
       if (status.gt.0) return
       r2=y(1)*y(1)+y(2)*y(2)+y(3)*y(3)
-      r=dsqrt(r2)
+      r=sqrt(r2)
       if (t.ge.tgrmax) then
          status=3
          return
@@ -132,7 +132,7 @@ c     pure dipole B field
       bx=-bfac1*y(1)*y(3)
       by=-bfac1*y(2)*y(3)
       bz=-bfac1*y(3)*y(3)+b0/r2/r
-      b=dsqrt(bx*bx+by*by+bz*bz)
+      b=sqrt(bx*bx+by*by+bz*bz)
 
       bfac2=5.*bfac1/r2
       dbxdx=-bfac1*y(3)+bfac2*y(1)*y(1)*y(3)
@@ -170,7 +170,7 @@ c     initialize fields
       include 'rbelt-const.inc'
 
 c     for non-zero efield
-!      noe=.false.
+      noe=.false.
 
 c     set e field zero here to save time in the interp(analytic) routine
       ex=0.
@@ -182,7 +182,7 @@ c     initialize B and derrivatives here in case we use zero_fields
       by=0.0  
       bz= charge_sign*1.e-8
 *      bz= 1.
-      b=dsqrt(bx*bx+by*by+bz*bz)
+      b=sqrt(bx*bx+by*by+bz*bz)
       dbxdx=0.0
       dbxdy=0.0
       dbxdz=0.0 

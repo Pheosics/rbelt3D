@@ -1,0 +1,147 @@
+
+rbelt code readme file for computing test-particles in an analytic field model
+------------------------------------------------------------------------------
+
+
+*** To run test-particles in an anlytic field model use Makefile targets
+
+rbelt_dip  (pure dipole)
+rbelt_ulf  (ULF field model -- still needs to be added to rbelt-ulffld.f)
+rbelt_cdip  (compressed dipole -- these equations should be checked)
+
+For example, compile like this
+
+make rbelt_dip
+
+then run
+
+./rbelt_dip
+
+A guiding center trajectory at L=6 will be computed for 10000 sec.
+
+
+*** To run test-particles in gridded fields read from HDF files use rbelt_hdf
+
+For example, compile like this
+
+make rbelt_hdf
+
+then run
+
+./rbelt_hdf
+
+First fields are read in from the sample baker_mhd files provided, then
+a guiding center trajectory at L=6 will be computed for 10000 sec.
+
+
+*** Here is more information about the code
+
+The main files to modify are:
+
+rbelt-input.txt -- rbelt input file (see below)
+rbelt-const.inc -- physical constants for scaling defined here
+(use to set main dipole strength, particle mass & charge, etc.)
+rbelt-grid.inc -- set grid parameters
+rbelt-y0.inc -- set number of particles here
+rbelt-io.inc -- i/o parameters
+
+You may also want to modify:
+
+rbelt-dist_????.f -- sets up the initial particle distribution
+rbelt-io.f -- rbelt code output routines
+rbelt-pstprc.inc -- for post proessing rbelt code output
+
+Additional files/routines (this is not a complete list)
+
+rbelt-bounds.inc -- simulation region space and time boundaries
+rbelt-dist.inc -- initial particle distribution parameters
+rbelt-fields.inc -- particle E & B fields and spatial derivatives
+rbelt-flag.inc -- Lorentz/guiding center flag
+rbelt-gcenter.inc -- guiding center time integration parameters
+rbelt-lorentz.inc -- Lorentz trajectory integration parameters
+rbelt-mu.inc -- adiabatic invariant for guiding center RHS routine
+rbelt-status.inc -- particle status
+rbelt-dipole.f -- pure dipole field
+rbelt-gcenter.f -- guiding center time integration routines
+rbelt-hdffileread.f -- reads rbelt hdf files
+rbelt-linterp3d.f -- 3D (tri-linear) interpolation 
+rbelt-linterp4d.f -- 4D (quad-linear) interpolation 
+rbelt-lorentz.f -- Lorentz trajectory integration routines
+rbelt-main.f -- main program for time dependent fields
+rbelt-main1t.f -- main program for static or analytic fields
+rbelt-particle_loop.f -- loops over each particle in distribution
+rbelt-rk.f -- various Runge-Kutta methods
+rbelt-time_loop.f -- loops over time & calls integrator 
+
+The main calling sequence is
+* main first loads fields, then calls particle_loop
+* particle_loop calls time_loop
+* time_loop calls the integrator (rk4)
+* the integrator calls RHS ("right hand side")
+  (rhs_cb for guiding center, rhs_lorentz for a Lorentz trajectory)
+* RHS calls get_fields
+* then, if the fields are on a grid, get_fields calls linterp3d or linterp4d
+  (3d for time-independnt, 4d for time-dependent)
+
+
+*** Here are some comments about the important input parameters
+
+The namelists you will want to modify initially are:
+
+ &rbelt
+   basename='isosphr_odip-'	! basename for input and output files
+   firstfilenum = 1,	! first input field file number 
+   lastfilenum =  1,	! last input field file number
+   filenumstep = 1,		! lfm time steps per dump step (NDUMP) -- leave this 1 for now
+ &END  
+
+c this is date and time that gets used for coordinate transformations
+c in cases where there is not ut.txt file read in 
+ &date
+   year0=2000,
+   doy0=1,
+   hour0=0,
+   min0=0,
+   sec0=0,
+   dsec=3600,
+ &END 
+
+ &bounds		! bounds must lie inside of rbelt grid
+   rmin = 1.0,		! radius of spherical inner boundary in R_E
+   rmax = 150.0,		! radius of spherical outer boundary in R_E
+   zmin = -1.0,	! lower planer boundary in R_E (not currently used)
+   zmax = 1.0,		! upper planer boundary in R_E (not currently used)
+   tmax = 1000.1		! max run time in sec. from first field time step
+ &END 
+ 
+ &io
+   dthalt = 0.0000001,	! (sec.) how often we check for flux counts during flux_dt
+   flux_dt = 200.0,	! flux integration time interval (starts flux_dt before wtime)
+   init_twrite = 600.0,	! initial time (sec) to write particle data 
+   dtwrite = 200.0,	! write interval (sec.)
+   binio = .true.,	! binary i/o
+   print_info = .false., ! print out particle data at write time
+   flux_out = .false.,
+   dist_out = .true.,
+   prcp_out = .false.,
+   init_out = .false.,
+   cone_out = .false.,
+   lcalc = 2		! 0 for dipole L; 1 for L_Mac.; 2 for L-star
+ &END 
+
+ &dist
+   dist_seed=111115,	! random num. gen. seed
+   dt_dist=1000.0,	! (sec.) delta t over which to choose random launch times
+   init_t = 0.0,	! (sec.) start time for launching distribution
+   emin=100.0,	! (MeV) minimum energy
+   emax=100.0,	! (MeV) maximum energy
+   epa_min=0.0,! (deg.) minimum equitorial pitch angle ()
+   epa_max=180.0,! (deg.) maximum equitorial pitch angle
+   lmin=3.0,	! minimum L-shell
+   lmax=8.0,	! maximum L-shell
+   radius=149.9,	! (RE) radius of spherical shell from which to launch particles 
+   exp = 0.0,	! energy spectrum exponent
+   factor = 1,	!
+   flag0=0,		! 0 for Lorentz 1 for guiding center 
+   flag_switch=.false.,	! If true we switch from GC -> Lorentz otherwise we stop the particle
+ &END 

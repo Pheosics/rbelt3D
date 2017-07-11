@@ -1,4 +1,4 @@
-COMPILER     = /opt/intel/bin/ifort
+COMPILER     = gfortran
 
 FFLAGS  = $(HDFINC) $(HDFLIB) -mcmodel=medium
 

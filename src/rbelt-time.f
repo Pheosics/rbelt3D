@@ -72,7 +72,11 @@ c date specifed by month mm, day id, and year iyyy, all integer variables. Posit
 c signifes A.D.; negative, B.C. Remember that the year after 1 B.C. was 1 A.D.
       INTEGER ja,jm,jy
       jy=iyyy
-      if (jy.eq.0) pause 'julday: there is no year zero'
+      if (jy.eq.0) then
+         print *,'julday: there is no year zero'
+         stop
+      endif
+
       if (jy.lt.0) jy=jy+1
       if (mm.gt.2) then
          jm=mm+1
@@ -286,7 +290,10 @@ c signifes A.D.; negative, B.C. Remember that the year after 1 B.C. was 1 A.D.
 *      print *,'iyyy,mm,id=',iyyy,mm,id
 
       jy=iyyy
-      if (jy.eq.0) pause 'julday2: there is no year zero'
+      if (jy.eq.0) then
+         print *,'julday2: there is no year zero'
+         stop
+      endif
       if (jy.lt.0) jy=jy+1
       if (mm.gt.2) then
          jm=mm+1
@@ -413,11 +420,32 @@ c       does not modify input variables
       include 'rbelt-ut.inc'
       integer year,doy,hour,min,sec,julday2
 
-*      print *,'********doy0,year0=',doy0,year0
+*      print *,'******** year,doy,hour,min,sec =',year,doy,hour,min,sec
 
       sec_frm_ref=86400*(julday2(doy,year)-
      &julday2(doy0,year0))+3600*hour+60*min+sec-
      &3600*hour0-60*min0-sec0
+
+      return 
+      END
+
+************************************************************************
+
+      subroutine sfr2date(t,year,doy,hour,min,sec)
+
+c       finds seconds from ref time in rbelt-ut.inc
+c       does not modify input variables
+
+      implicit none
+      include 'rbelt-ut.inc'
+      integer t,year,doy,hour,min,sec
+
+      year=year0
+      doy=doy0
+      hour=hour0
+      min=min0
+      sec=sec0+t
+      call reduce_time2(year,doy,hour,min,sec)
 
       return 
       END
@@ -443,7 +471,7 @@ c     need to check this
       
 ************************************************************************
 
-      real*8 function dyear(year,doy,hour,min,sec)
+      real function dyear(year,doy,hour,min,sec)
 
       implicit none
       include 'rbelt-ut.inc'
@@ -527,26 +555,22 @@ c     need to check this
 
 ************************************************************************
 
-      subroutine rbelt_recalc()
+      subroutine rbelt_recalc(sfr)
       implicit none
       include 'rbelt-ut.inc'
-      include 'rbelt-grid.inc'
-      include 'rbelt-geopak.inc'
+      include 'rbelt-geopack_08.inc'
       include 'rbelt-const.inc'
-      integer iyear,idoy,ihour,min,isec  
+      integer year,doy,hour,min,sec
+      real sfr
 
 c     get date/time & call recalc.
-      iyear=year0
-      idoy=doy0
-      ihour=hour0
+      year=year0
+      doy=doy0
+      hour=hour0
       min=min0
-      isec=sec0+tgr(1)
-      call reduce_time2(iyear,idoy,ihour,min,isec)
-      print *
-      print *,'calling RECALC w/ IYEAR,IDOY,IHOUR,MIN,ISEC=',
-     &   IYEAR,IDOY,IHOUR,MIN,ISEC
-      call RECALC (IYEAR,IDOY,IHOUR,MIN,ISEC)
-      print *,'done with RECALC: tilt=',atan2(SPS,CPS)*raddeg
+      sec=sec0+sfr
+      call reduce_time2(year,doy,hour,min,sec)
+      call RECALC_08 (YEAR,DOY,HOUR,MIN,SEC,-400.,0.,0.)
       return
       END
 

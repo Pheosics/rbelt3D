@@ -1,7 +1,7 @@
 c     const.inc - rbelt constants
 
-      real*8 Re,m0,c,charge,q,ntg,vmsvcm,wrest,ec2sc,charge_sign
-      real*8 tfactor,ffactor,b0,raddeg,pi,svv,rgdt2gv
+      real Re,m0,c,charge,q,ntg,vmsvcm,wrest,ec2sc,charge_sign
+      real tfactor,ffactor,b0,raddeg,pi,svv,rgdt2gv
 
 c     scaling constants (http://physics.nist.gov/)
 c     define charge state & mass here ********************************
@@ -12,8 +12,8 @@ c     define charge state & mass here ********************************
 c     ****************************************************************
       parameter(Re=6378.137e5)		! earth eq. radius, in cm (IUGG)
 c     note, polar radius is ~ 6356.75e5 cm
-c     mean radius (r=dsqrt(A/4*pi)) is ~ 6371.3e5 cm
-c     quadratic mean radius (q=dsqrt((3r_e^2+r_p^2)/4) is ~ 6372.795e5 cm
+c     mean radius (r=sqrt(A/4*pi)) is ~ 6371.3e5 cm
+c     quadratic mean radius (q=sqrt((3r_e^2+r_p^2)/4) is ~ 6372.795e5 cm
       parameter(c=2.99792458e10)		! speed of light, cm/s
       parameter(ec2sc=3.e9*1.60217653e-19) ! elem. charge to stat coul.
       parameter(q=charge*ec2sc)		! charge, in esu

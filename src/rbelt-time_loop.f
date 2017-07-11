@@ -23,16 +23,18 @@ c
       include 'rbelt-const.inc'
       include 'rbelt-dist.inc'
       include 'rbelt-io.inc'
-*      include 'rbelt-grid.inc'
+      include 'rbelt-gcenter.inc'
       include 'rbelt-fields.inc'
       external integrator,rhs,rhs_init
+      external boris_init, boris_stop
       integer i,nvars,step,tmpstatus
-      real*8 t,t2,dt,y(6),dydt(6),thalt1,thalt2,thalt3,
+      real t,t2,dt,y(nvars),dydt(nvars),thalt1,thalt2,thalt3,
      &tstop,r,phi
 
-*      print *
-*      print *,'*** in subroutine time loop ***'
-*      print *,'i,t,t2,nvars=',i,t/tfactor,t2/tfactor,nvars
+!      print *
+!      print *,'*** in subroutine time loop ***'
+!      print *,'i,t,t2,nvars=',i,t/tfactor,t2/tfactor,nvars
+!      print *,'y=',y
 *      stop
 
 c     use tgrmax in linterp to stop particle at t2
@@ -46,12 +48,14 @@ c     set upper bound on tstop
 
 c     initialize i/o & additional integration stop times
       call yout_init(i,y,t,t2,thalt2,thalt3)
-!      if ((flag.eq.0).and.(flag_switch.eqv..true.)) thalt1=t
+!      if ((flag.eq.0).and.(flag_switch.eqv..true.)) thalt1=t+dtgo2gc
 
 c     set tstop (why is this here?)
-      tstop=dmin1(thalt2,thalt3)
+      tstop=amin1(thalt2,thalt3)
 
-      if (flag.eq.0) call boris_init(t,y,dydt,dt)
+      if (flag.eq.0) then
+        call boris_init(t,y,dydt,dt)
+      endif
 
 c     time stepping loop
       step=0
@@ -72,28 +76,41 @@ c        output particle data
          endif
 
 c        reset tstop
-         tstop=dmin1(thalt2,thalt3)
+         tstop=amin1(thalt3,thalt2)
 
 c        initialize integrator
          call rhs_init(t,y,dydt,dt)
-
 c        integration loop
-201      if (((t.le.tstop).or.(thalt2.ge.thalt3)).and.
-     &(status.eq.0)) then
+201      if ((t.le.tstop).and.(status.eq.0)) then
 c           take a step
             call integrator(y,dydt,t,dt,nvars,rhs,rhs_init)
-!            step=step+1
-!            if (step.eq.10000000) then
-!               print *, t/tfactor, dt/tfactor, t2/tfactor
-!               step = 0
-!            endif
+
+!               print *,'t,x,y=',t/tfactor,y(1),y(2),dt
+
+            step=step+1
+            if (step.gt.10000000) then
+               print *,t/tfactor,dt/tfactor,tstop/tfactor
+!               status=6
+                step = 0
+            endif
+
+             if ((t+dt).eq.t) then
+                print *,'(t+dt).eq.t: t,dt,(t+dt)',t/tfactor,dt/tfactor,
+     &(t+dt)/tfactor
+                stop
+             endif
+
             goto 201
          endif
 
          goto 200
       endif
 
-      if (flag.eq.0) call boris_stop(t,y,dydt,dt)
+*      print *,'step=',step
+      if (flag.eq.0) then
+        call boris_stop(t,y,dydt,dt)
+      endif
 
       return
       end
+
